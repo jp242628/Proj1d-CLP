@@ -1,9 +1,4 @@
 // Joao P S L Pereira
-// p-code.cpp :  cpp.sh
-//
-// C conventions
-// 0 == FALSE
-//
 #include <stdio.h>
 
 #define levmax 3
@@ -19,8 +14,6 @@ typedef struct tinstruction {
 
 instruction code[2048];
 
-//procedure interpret;
-// const stacksize = 500;
 
 #define stacksize 5012
 
@@ -50,21 +43,15 @@ void pcodevhw(){ // begin
  printf("\n start pl/0");
  printf("\n p   b   t     f   l   a                 0   1   2   3   4   5   6   7   8   9  10  11  12  13  14");
  printf("\n === === ===   === === ===             === === === === === === === === === === === === === === ===");
- t = -1; // topstack-register
- b = 0;  // base-register
- p = 0;  // program-register
-
- // OBS: s[0] must not be used
+ t = -1;
+ b = 0;
+ p = 0;
  s[1] = 0;
  s[2] = 0;
  s[3] = 0;
 
-
-
-
  do {
   i = code[p];
-  //printf("\n %3d %3d %3d - %3d %3d %3d", p, b, t, i.f, i.l, i.a);
   printf("\n %3d %3d %3d   ", p, b, t);
   p = p + 1;
  // switch case i.f-BEGIN
@@ -183,9 +170,7 @@ void pcodevhw(){ // begin
    case JMP : p = i.a;    printf("JMP %3d %3d", i.l, i.a); break;
    case JPC : if (s[t] != 0) { p = i.a; }  t = t - 1; printf("JPC %3d %3d", i.l, i.a); break;
   } // end {with, case}
-  // switch case i.f-END
 
-  // print stack
   printf("      s[] : ");
   for (int h=0; h<=t; h++) { printf(" %3d", s[h]); }
  } while ( p != 0 );
@@ -195,50 +180,53 @@ void pcodevhw(){ // begin
  printf("\n end pl/0");
 }//end-void-pcmachine() {interpret};
 
-int main() {
-    code[0].f = INT; code[0].l = 0; code[0].a = 5;   // main-INICIO
-    code[1].f = LIT; code[1].l = 0; code[1].a = 5;   // n = 5
-    code[2].f = STO; code[2].l = 0; code[2].a = 11;   // ARI(11)<-n
-    code[3].f = CAL; code[3].l = 0; code[3].a = 5; // Call fat(n)
-    code[4].f = OPR; code[4].l = 0; code[4].a = 0; // OPR (RETURN)
+    int main() {
+    int n = 5;
 
-    // Função fib(n)
-    code[5].f = INT; code[5].l = 0; code[5].a = 9;   // fat-INICIO
-    code[6].f = LIT; code[6].l = 0; code[6].a = 1;   // load 1
-    code[7].f = STO; code[7].l = 0; code[7].a = 3;   // ARI(3)<-n
-    code[8].f = LIT; code[8].l = 0; code[8].a = 1;   // load 1
-    code[9].f = STO; code[9].l = 0; code[9].a = 4;   // store n
-    code[10].f = LIT; code[10].l = 0; code[10].a = 2;   // load 2
-    code[11].f = STO; code[11].l = 0; code[11].a = 5; // store 2
-    
+    // Instruções para inicialização e chamada da função fib(5)
+    code[0].f = INT; code[0].l = 0; code[0].a = 9;   // main-INICIO
+    code[1].f = LIT; code[1].l = 0; code[1].a = n;   // LIT 0 5
+    code[2].f = STO; code[2].l = 0; code[2].a = 15;   // STO 0 15
+    code[3].f = LIT; code[3].l = 0; code[3].a = 1;   // load 1
+    code[4].f = STO; code[4].l = 0; code[4].a = 12;   // ARI(3)<-n
+    code[5].f = LIT; code[5].l = 0; code[5].a = 1;   // load 1
+    code[6].f = STO; code[6].l = 0; code[6].a = 13;   // store n
+    code[7].f = LIT; code[7].l = 0; code[7].a = 2;   // load 2
+    code[8].f = STO; code[8].l = 0; code[8].a = 14; // store 2
+    code[9].f = CAL; code[9].l = 0; code[9].a = 11;   // CAL 0 11
+    code[10].f = OPR; code[10].l = 0; code[10].a = 0;   // OPR 0 0
+
+    // Função recursiva para calcular
+    code[11].f = INT; code[11].l = 0; code[11].a = 9;   // fat-INICIO
     code[12].f = LOD; code[12].l = 0; code[12].a = 3;   // load n
     code[13].f = LOD; code[13].l = 0; code[13].a = 4;   // store n
     code[14].f = OPR; code[14].l = 0; code[14].a = 2;   // store n
-    
     code[15].f = LOD; code[15].l = 0; code[15].a = 4;   // store n
-    code[16].f = STO; code[16].l = 0; code[16].a = 3;   // store n
-    code[17].f = STO; code[17].l = 0; code[17].a = 4;   // store n
-    
-    
+    code[16].f = STO; code[16].l = 0; code[16].a = 12;   // store n
+    code[17].f = STO; code[17].l = 0; code[17].a = 13;   // store n
     code[18].f = LOD; code[18].l = 0; code[18].a = 5;   // load 2
     code[19].f = LIT; code[19].l = 0; code[19].a = 1; // load 1
     code[20].f = OPR; code[20].l = 0; code[20].a = 2; // n-1
-    code[21].f = STO; code[21].l = 0; code[21].a = 5; // store n-1 for the next recursive call
+    code[21].f = STO; code[21].l = 0; code[21].a = 14; // store n-1 for the next recursive call
     
-    code[22].f = LOD; code[22].l = 0; code[22].a = 5;   // load n
-    code[23].f = LOD; code[23].l = 0; code[23].a = 6;   // load n
-    code[24].f = OPR; code[24].l = 0; code[24].a = 8;   // check if n == 1
-    code[25].f = JPC; code[25].l = 0; code[25].a = 27;  // jump to the end if n == 1
-    code[26].f = JMP; code[26].l = 0; code[26].a = 12; // jump back to the beginning of the loop
+    code[22].f = LOD; code[22].l = 0; code[22].a = 13; // load n
+    code[23].f = STO; code[23].l = 0; code[23].a = 4; // store n
+    code[24].f = LOD; code[24].l = 0; code[24].a = 6; // load n
+    code[25].f = STO; code[25].l = 0; code[25].a = 15; // store n
 
-    // Return to the main function
-    code[27].f = LOD; code[27].l = 0; code[27].a = 4; // load n (result)
-    code[28].f = STO; code[28].l = 1; code[28].a = 4; // store the result in the variable t+3 (n)
-    code[29].f = OPR; code[29].l = 0; code[29].a = 0; // RETURN // main-FIM
+    code[26].f = LOD; code[26].l = 0; code[26].a = 14;   // load n
+    code[27].f = LOD; code[27].l = 0; code[27].a = 6;   // load n
+    code[28].f = OPR; code[28].l = 0; code[28].a = 8;   // check if n == 1
+    code[29].f = JPC; code[29].l = 0; code[29].a = 31;  // jump to the end if n == 1
+    code[30].f = CAL; code[30].l = 0; code[30].a = 11; // jump back to the beginning of the loop
+
+    // Retorno e término da função main
+    code[31].f = LOD; code[31].l = 0; code[31].a = 4;   // LOD 0 4
+    code[32].f = STO; code[32].l = 1; code[32].a = 4;   // STO 0 4
+    code[33].f = OPR; code[33].l = 0; code[33].a = 0;   // OPR 0 0
 
     // Chamada da P-code machine para interpretar essas instruções
     pcodevhw();
+
     return 0;
 }
-
-
