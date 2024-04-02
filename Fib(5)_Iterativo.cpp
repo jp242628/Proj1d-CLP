@@ -202,7 +202,7 @@ int main() {
     code[3].f = CAL; code[3].l = 0; code[3].a = 5; // Call fat(n)
     code[4].f = OPR; code[4].l = 0; code[4].a = 0; // OPR (RETURN)
 
-    // Função fat(n)
+    // Função fib(n)
     code[5].f = INT; code[5].l = 0; code[5].a = 9;   // fat-INICIO
     code[6].f = LIT; code[6].l = 0; code[6].a = 1;   // load 1
     code[7].f = STO; code[7].l = 0; code[7].a = 3;   // ARI(3)<-n
